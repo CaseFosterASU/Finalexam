@@ -1,0 +1,48 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- Part 1: Normal Force Coefficient (CN) ---
+# Parameters
+chord_length = 2.5  # chord length in meters
+x_c = np.linspace(0, 1, 100)  # normalized chordwise positions (x/c)
+
+# Velocity distribution (example values)
+V_upper_ratio = np.concatenate((3 * np.ones(50), np.linspace(3, 1, 50)))  # upper surface
+V_lower_ratio = np.concatenate((2 * np.ones(50), np.linspace(2, 1, 50)))  # lower surface
+
+# Pressure coefficient difference and normal force coefficient
+cp_difference = (V_upper_ratio**2 - V_lower_ratio**2)
+normal_force_coefficient = np.trapz(cp_difference, x_c)
+
+print(f"Normal Force Coefficient (CN): {normal_force_coefficient:.3f}")
+
+# Plotting velocity distributions
+plt.figure()
+plt.plot(x_c, V_upper_ratio, label="Upper Surface Velocity Ratio", color="blue", linewidth=1.5)
+plt.plot(x_c, V_lower_ratio, label="Lower Surface Velocity Ratio", color="red", linewidth=1.5)
+plt.xlabel("x/c")
+plt.ylabel("V/U∞")
+plt.title("Velocity Distribution Over Airfoil Surfaces")
+plt.grid(True)
+plt.legend()
+plt.show()
+
+# --- Part 2: Velocity Induced at the Centroid ---
+# Parameters for Induced Velocity
+circulation = 1.0  # Circulation (units in m^2/s)
+triangle_side_length = 1.0  # Side length of the equilateral triangle (meters)
+
+# Geometry of the equilateral triangle vortex ring
+perpendicular_distance = np.sqrt(3) / 6 * triangle_side_length  # Distance from centroid to side
+theta1 = np.pi / 3  # Angle subtended at one end
+theta2 = -np.pi / 3  # Angle subtended at the other end
+
+# Velocity induced by one segment
+velocity_segment = (circulation / (4 * np.pi * perpendicular_distance)) * (
+    np.sin(theta1) - np.sin(theta2)
+)
+
+# Total velocity induced at the centroid
+total_velocity = 3 * velocity_segment
+
+print(f"Velocity Induced at the Centroid: {total_velocity:.3f} m/s")
